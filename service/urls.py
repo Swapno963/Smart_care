@@ -4,7 +4,7 @@ from . import views
 
 router = DefaultRouter()
 
-router.register(f'services', views.ServiceSerializer)
+router.register(f'services', views.ServiceViewSet)
 
 
 urlpatterns = [
