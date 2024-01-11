@@ -9,5 +9,6 @@ router.register(f'patient', views.PatientViewSet)
 urlpatterns = [
     path('',include(router.urls)),
     path('/register',views.UserRegistration.as_view(),name='register'),
+    path('/login',views.UserLoginApiView.as_view(),name='login'),
     path('/active/<uid64>/<token>/',views.activat,name='acive'),
 ]

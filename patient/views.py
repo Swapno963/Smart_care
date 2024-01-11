@@ -16,11 +16,16 @@ from django.template.loader import render_to_string
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 
+
+# for login 
+from django.contrib.auth import authenticate, login
+from rest_framework.authtoken.models import Token
+
+
+
 class PatientViewSet(viewsets.ModelViewSet):
     queryset = models.Patient.objects.all()
     serializer_class = serializer.PatientSerializer
-
-
 
 class UserRegistration(APIView):
     serializer_class = serializer.RegistrationSerializer
@@ -50,8 +55,6 @@ class UserRegistration(APIView):
         return Response("Register Done")
     
 
-
-
 def activat(request,uid64, token):
     try:
         uid = urlsafe_base64_decode(uid64).decode()
@@ -63,6 +66,26 @@ def activat(request,uid64, token):
     if user is not None and default_token_generator.check_token(user,token):
         user.is_active = True
         user.save()
-        return redirect('register')
+        return redirect('login')
     else:
         return redirect('register')
+    
+
+class UserLoginApiView(APIView):
+    def post(self, request):
+        my_serializer = serializer.UserLoginSerializer(data = self.request.data)
+        if my_serializer.is_valid():
+            username = my_serializer.validated_data['username']
+            password = my_serializer.validated_data['password']
+
+            user = authenticate(username= username, password=password)
+            
+            if user:
+                token, _ = Token.objects.get_or_create(user=user)
+                print(token)
+                print(_)
+                login(request, user)
+                return Response({'token' : token.key, 'user_id' : user.id})
+            else:
+                return Response({'error' : "Invalid Credential"})
+        return Response(my_serializer.errors)

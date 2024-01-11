@@ -11,8 +11,6 @@ class PatientSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_passwoord = serializers.CharField(required=True)
     class Meta:
@@ -37,3 +35,8 @@ class RegistrationSerializer(serializers.ModelSerializer):
         account.is_active = False # make it true when user click our varification email
         account.save()
         return account
+
+
+class UserLoginSerializer(serializers.Serializer):
+    username = serializers.CharField(required = True)
+    password = serializers.CharField(required = True)
