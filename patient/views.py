@@ -18,7 +18,7 @@ from django.contrib.auth.models import User
 
 
 # for login 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login,logout
 from rest_framework.authtoken.models import Token
 
 
@@ -89,3 +89,11 @@ class UserLoginApiView(APIView):
             else:
                 return Response({'error' : "Invalid Credential"})
         return Response(my_serializer.errors)
+    
+
+
+class UserLogoutView(APIView):
+    def get(self, request):
+        request.user.auth_token.delete()
+        logout(request)
+        return redirect('login')
