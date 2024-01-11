@@ -7,5 +7,7 @@ router = DefaultRouter()
 router.register(f'patient', views.PatientViewSet)
 
 urlpatterns = [
-    path('',include(router.urls))
+    path('',include(router.urls)),
+    path('/register',views.UserRegistration.as_view(),name='register'),
+    path('/active/<uid64>/<token>/',views.activat,name='acive'),
 ]
